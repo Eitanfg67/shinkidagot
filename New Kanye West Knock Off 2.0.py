@@ -1,21 +1,22 @@
 import pygame
 import sys
-import random
+
 
 pygame.init()
 pygame.font.init()
 
-SCREEN_WIDTH, SCREEN_HEIGHT = 1200, 1000
+SCREEN_WIDTH, SCREEN_HEIGHT = 1366, 1200
 CAMERA_WIDTH, CAMERA_HEIGHT = 800, 600
 
 surface = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-pygame.display.set_caption("Shinki da goat")
+pygame.display.set_caption("Shinki da got")
 
 block = pygame.image.load('block.png')
 floor = pygame.image.load('floor.png')
 player = pygame.image.load('yosi_gizan_noBG.png')
 coin = pygame.image.load('coin.png')
 enemy = pygame.image.load('enemy.png')
+spike = pygame.image.load('spike.png')
 
 cloud1 = pygame.image.load('cloud1.png')
 cloud2 = pygame.image.load('cloud2.png')
@@ -24,12 +25,12 @@ cloud4 = pygame.image.load('cloud4.png')
 cloud5 = pygame.image.load('cloud5.png')
 cloud6 = pygame.image.load('cloud6.png')
 
-blocks_x = [251, 299, 347, 395]
-start_y = [700, 700, 652, 652]
-blocks_y = [610, 610, 562, 562]
+blocks_x = [251]
+start_y = [840]
+blocks_y = [795]
 
-coin_x = [443, 300, 500]
-coin_y = [400, 800, 700]
+coin_x = []
+coin_y = []
 
 
 clock = pygame.time.Clock()
@@ -50,7 +51,7 @@ class Movement:
         self.allow_movement = True
 
     def move(self):
-        normalYpos = [807, 610, 562]
+        normalYpos = [807]
 
         keys = pygame.key.get_pressed()
         if self.allow_movement == True:
@@ -125,11 +126,14 @@ class Movement:
         surface.blit(floor, (x, y))
 
     @staticmethod
-    def blocks(x, y, x1, y1, x2, y2, x3, y3):
-        surface.blit(block, (x, y))
-        surface.blit(block, (x1, y1))
-        surface.blit(block, (x2, y2))
-        surface.blit(block, (x3, y3))
+    def blocks():
+        for i in range(len(blocks_x)):
+            surface.blit(block, (blocks_x[i], start_y[i]))
+
+
+    @staticmethod
+    def spike(x,y):
+        surface.blit(spike,(x,y))
 
     def clouds(self, x, y, surface):
         space_between_clouds = 200
@@ -150,6 +154,7 @@ class Movement:
 
     def lose(self):
         if self.allow_movement == False:
+
             surface.fill((255, 255, 255))
             pygame.display.flip()
             pygame.time.delay(1000)
@@ -160,7 +165,7 @@ class Movement:
 
     def collision(self):
         for i in range(len(blocks_x)):
-            if blocks_x[i] - 48 <= self.xPos <= blocks_x[i] and blocks_y[i] <= self.yPos <= start_y[i]:
+            if blocks_x[i] - 48 <= self.xPos <= blocks_x[i] and blocks_y[i] -48 <= self.yPos <= start_y[i]:
                 self.yPos = blocks_y[i]
                 self.velocityY = 0
 
@@ -209,12 +214,12 @@ while running:
     my_game.move()
     my_game.collision()
     my_game.Grass(0 - my_game.camera_x, 887)
-    my_game.blocks(251 - my_game.camera_x, 694, 299 - my_game.camera_x, 694, 347 - my_game.camera_x, 646,395 - my_game.camera_x, 646)
+    my_game.blocks()
     my_game.coins()
     my_game.draw_player_cube()
     my_game.clouds(0-my_game.camera_x, 100, surface)
     my_game.enemies()
-
+    my_game.spike(100,807)
 
 
 
